@@ -36,7 +36,7 @@ func findInterface(iface string, srcDir string) (path string, id string, err err
 		return "", "", fmt.Errorf("couldn't parse interface: %s", iface)
 	}
 
-	srcPath := filepath.Join(srcDir, "__go_impl__.go")
+	srcPath := filepath.Join(srcDir, "/hack/__go_impl__.go")
 
 	if slash := strings.LastIndex(iface, "/"); slash > -1 {
 		// package path provided
@@ -378,14 +378,6 @@ func genMethodStubs(recv string, fns []Func) []byte {
 
 	return buf.Bytes()
 }
-
-const stub = "{{if .Comments}}{{.Comments}}{{end}}" +
-	"func ({{.Recv}}) {{.Name}}" +
-	"({{range .Params}}{{.Name}} {{.Type}}, {{end}})" +
-	"({{range .Res}}{{.Name}} {{.Type}}, {{end}})" +
-	"{\n" + "panic(\"not implemented\") // TODO: Implement" + "\n}\n\n"
-
-var tmpl = template.Must(template.New("test").Parse(stub))
 
 // validReceiver reports whether recv is a valid receiver expression.
 func validReceiver(recv string) bool {
